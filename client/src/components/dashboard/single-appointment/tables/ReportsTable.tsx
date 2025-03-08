@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Table,
   TableBody,
@@ -9,7 +9,9 @@ import {
   Paper,
   TablePagination,
   Button,
-  Box
+  Box,
+  TextField,
+  InputAdornment
 } from '@mui/material';
 import { RouterLink } from '@/components/core/link';
 
@@ -18,7 +20,7 @@ export interface ReportData {
   title: string;
   createdAt: string;
   type: string;
-  // Puedes agregar más campos según lo necesites.
+  user: string;
 }
 
 interface ReportsTableProps {
@@ -27,33 +29,75 @@ interface ReportsTableProps {
 }
 
 export const ReportsTable: React.FC<ReportsTableProps> = ({ reports, onDelete }) => {
-  const [page, setPage] = React.useState<number>(0);
+  const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
+  const [filterText, setFilterText] = useState<string>('');
+
+  // Ordena los reportes de mayor a menor (por createdAt)
+  const sortedReports = useMemo(() => {
+    return [...reports].sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }, [reports]);
+
+  // Filtra por título (puedes ampliar este filtro según necesites)
+  const filteredReports = useMemo(() => {
+    if (!filterText.trim()) return sortedReports;
+    return sortedReports.filter(report =>
+      report.title.toLowerCase().includes(filterText.toLowerCase())
+    );
+  }, [filterText, sortedReports]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
-  const displayedReports = reports.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const displayedReports = filteredReports.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   return (
     <Paper>
+      <Box p={2}>
+        <TextField
+          label="Filter by Title"
+          variant="outlined"
+          fullWidth
+          value={filterText}
+          onChange={(e) => {
+            setFilterText(e.target.value);
+            setPage(0);
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                🔍
+              </InputAdornment>
+            )
+          }}
+        />
+      </Box>
       <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell>Id</TableCell>
+              <TableCell>User</TableCell>
               <TableCell>Title</TableCell>
-              <TableCell>Created At</TableCell>
               <TableCell>Type</TableCell>
+              <TableCell>Created At</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {displayedReports.map((report) => (
               <TableRow key={report._id}>
+                <TableCell>{report._id}</TableCell>
+                <TableCell>{report.user}</TableCell>
                 <TableCell>{report.title}</TableCell>
-                <TableCell>{new Date(report.createdAt).toLocaleString()}</TableCell>
                 <TableCell>{report.type}</TableCell>
+                <TableCell>{new Date(report.createdAt).toLocaleString()}</TableCell>
                 <TableCell align="center">
                   <Box display="flex" justifyContent="center" gap={1}>
                     <Button component={RouterLink} href={`/report/${report._id}`} variant="outlined">
@@ -71,7 +115,7 @@ export const ReportsTable: React.FC<ReportsTableProps> = ({ reports, onDelete })
       </TableContainer>
       <TablePagination
         component="div"
-        count={reports.length}
+        count={filteredReports.length}
         page={page}
         onPageChange={handleChangePage}
         rowsPerPage={rowsPerPage}
