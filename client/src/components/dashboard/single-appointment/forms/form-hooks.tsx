@@ -1,6 +1,7 @@
+// client/src/components/dashboard/single-appointment/forms/form-hooks.tsx
 import type * as React from 'react';
 import { useCallback, useState } from 'react';
-import type { Report } from './report-form';
+import type { Report } from '@/types/report';
 
 interface UseFormHookReturnType {
   isDescriptionValid: boolean;
@@ -29,8 +30,8 @@ export const useFormHook = ({ report, setReport }: UseFormHookParams): UseFormHo
   );
 
   const validateForm = useCallback(() => {
-    setIsDescriptionValid(Boolean(report?.description?.trim()));
-  }, [report?.description]);
+    setIsDescriptionValid(Boolean(report.description?.trim()));
+  }, [report.description]);
 
   const updateTitle = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,38 +1,18 @@
+// client/src/pages/new-report.tsx
 import * as React from 'react';
 import { ReportForm } from '@/components/dashboard/single-appointment/forms/report-form';
 import { createReport } from '@/services/reports';
 import { useNavigate } from 'react-router-dom';
-
-// Shared interfaces for Report and its Items
-export interface ReportItem {
-  description: string;
-  costCode: string;
-  images: File[];
-}
-
-export interface Report {
-  issueId: string;
-  createdAt: Date;
-  title: string;
-  items: ReportItem[];
-  type: string;
-  parts: string;
-  links: string[];
-  user: string;
-  approvalNeeded: boolean | null;
-}
+import type { Report } from '@/types/report';
 
 /**
- * Generates a random 24-character hexadecimal string
- * similar to a MongoDB ObjectId.
+ * Genera un ObjectId de 24 caracteres (similar a un ObjectId de MongoDB)
  */
 function generateObjectId(): string {
   const timestamp = Math.floor(new Date().getTime() / 1000).toString(16);
   return (
     timestamp +
-    'xxxxxxxxxxxxxxxx'.replace(/[x]/g, () =>
-      (Math.floor(Math.random() * 16)).toString(16)
-    )
+    'xxxxxxxxxxxxxxxx'.replace(/[x]/g, () => (Math.floor(Math.random() * 16)).toString(16))
   ).toLowerCase();
 }
 
@@ -43,11 +23,12 @@ export function Page(): React.JSX.Element {
     issueId: generateObjectId(),
     createdAt: new Date(),
     title: '',
+    description: '',
     items: [],
     type: '',
     parts: '',
     links: [],
-    user: generateObjectId(), // Genera un ObjectId válido para "user"
+    user: generateObjectId(), // Se genera un ObjectId válido para "user"
     approvalNeeded: false,
   });
 
@@ -71,7 +52,15 @@ export function Page(): React.JSX.Element {
 
   return (
     <div style={{ padding: '70px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <div style={{ border: '1px solid #ccc', padding: '20px', borderRadius: '8px', width: '100%', maxWidth: '600px' }}>
+      <div
+        style={{
+          border: '1px solid #ccc',
+          padding: '20px',
+          borderRadius: '8px',
+          width: '100%',
+          maxWidth: '600px',
+        }}
+      >
         <h1 style={{ textAlign: 'center' }}>Create New Report</h1>
         <ReportForm
           formType="Other"

@@ -1,24 +1,16 @@
+// client/src/components/dashboard/single-appointment/forms/report-form.tsx
 import * as React from 'react';
-import { Box, Button, Stack, TextField, FormControlLabel, Checkbox } from '@mui/material';
+import {
+  Box,
+  Button,
+  Stack,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+} from '@mui/material';
 import { ItemForm } from './item-form';
 import { useNavigate } from 'react-router-dom';
-
-export interface ReportItem {
-  description: string;
-  costCode: string;
-  images: File[];
-}
-
-export interface Report {
-  createdAt: Date;
-  title: string;
-  items: ReportItem[];
-  type: string;
-  parts: string;
-  links: string[];
-  user: string;
-  approvalNeeded: boolean | null;
-}
+import type { Report, ReportItem } from '@/types/report';
 
 interface ReportFormProps {
   loading: boolean;
@@ -42,7 +34,7 @@ export function ReportForm({
   }, [formType, setReport]);
 
   const addNewItem = () => {
-    const newItem = { description: '', costCode: '', images: [] };
+    const newItem: ReportItem = { description: '', costCode: '', images: [] };
     setReport((prev) => ({ ...prev, items: [...prev.items, newItem] }));
   };
 
@@ -72,6 +64,17 @@ export function ReportForm({
             fullWidth
             value={report.title}
             onChange={(e) => setReport((prev) => ({ ...prev, title: e.target.value }))}
+          />
+        </Box>
+        {/* Report Description */}
+        <Box>
+          <TextField
+            label="Description"
+            fullWidth
+            multiline
+            minRows={3}
+            value={report.description}
+            onChange={(e) => setReport((prev) => ({ ...prev, description: e.target.value }))}
           />
         </Box>
         {/* Items Section */}
@@ -127,12 +130,11 @@ export function ReportForm({
             }
           />
         </Box>
-        {/* Nuevos campos para Type, User y ApprovalNeeded */}
         <Box>
           <FormControlLabel
             control={
               <Checkbox
-                checked={report.approvalNeeded || false}
+                checked={report.approvalNeeded}
                 onChange={(e) =>
                   setReport((prev) => ({ ...prev, approvalNeeded: e.target.checked }))
                 }

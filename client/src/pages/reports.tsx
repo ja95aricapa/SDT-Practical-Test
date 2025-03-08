@@ -37,6 +37,9 @@ export function ReportsPage(): React.JSX.Element {
 
   return (
     <Box sx={{ p: 3 }}>
+      <Typography variant="h4" gutterBottom>
+        Reports Table
+      </Typography>
       <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
         <Button component={RouterLink} href="/" variant="outlined">
           Return Home

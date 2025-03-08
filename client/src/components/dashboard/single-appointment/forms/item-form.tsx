@@ -1,13 +1,9 @@
+// client/src/components/dashboard/single-appointment/forms/item-form.tsx
 import * as React from 'react';
 import { Box, IconButton, Stack, TextField, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Uploader } from '@/components/dashboard/single-appointment/uploader';
-
-export interface ReportItem {
-  description: string;
-  costCode: string;
-  images: File[];
-}
+import type { ReportItem } from '@/types/report';
 
 interface ItemFormProps {
   item: ReportItem;
