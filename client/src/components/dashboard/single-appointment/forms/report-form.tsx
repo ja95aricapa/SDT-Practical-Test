@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Box, Button, Stack } from '@mui/material';
 import { ItemForm } from './item-form';
+import { useNavigate } from 'react-router-dom';
 
 export interface ReportItem {
   description: string;
@@ -34,6 +35,8 @@ export function ReportForm({
   sendReportToDatabase,
   formType,
 }: ReportFormProps): React.JSX.Element {
+  const navigate = useNavigate();
+
   React.useEffect(() => {
     setReport((prev) => ({ ...prev, type: formType }));
   }, [formType, setReport]);
@@ -52,6 +55,11 @@ export function ReportForm({
   const removeItem = (index: number) => {
     const newItems = report.items.filter((_, i) => i !== index);
     setReport((prev) => ({ ...prev, items: newItems }));
+  };
+
+  // Función para cancelar y volver a la lista de reportes
+  const handleCancel = () => {
+    navigate('/reports');
   };
 
   return (
@@ -97,15 +105,20 @@ export function ReportForm({
             onChange={(e) =>
               setReport((prev) => ({
                 ...prev,
-                links: e.target.value.split(',').map((link) => link.trim()).filter((link) => link)
+                links: e.target.value.split(',').map((link) => link.trim()).filter((link) => link),
               }))
             }
             style={{ width: '100%', padding: '8px', fontSize: '16px' }}
           />
         </Box>
-        <Button disabled={loading} onClick={sendReportToDatabase} size="large" variant="outlined" fullWidth>
-          {loading ? 'Loading...' : 'Upload Report'}
-        </Button>
+        <Stack direction="row" spacing={2}>
+          <Button disabled={loading} onClick={sendReportToDatabase} size="large" variant="outlined" fullWidth>
+            {loading ? 'Loading...' : 'Upload Report'}
+          </Button>
+          <Button disabled={loading} onClick={handleCancel} size="large" variant="outlined" fullWidth>
+            Cancel
+          </Button>
+        </Stack>
       </Stack>
     </Box>
   );

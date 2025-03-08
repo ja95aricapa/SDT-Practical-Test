@@ -79,7 +79,7 @@ export function Hero(): React.JSX.Element {
             <Typography sx={{ textAlign: 'center' }}>{instructions}</Typography>
           </Stack>
           <Stack direction="row" spacing={2} sx={{ justifyContent: 'center' }}>
-            <Button component={RouterLink} href={paths.newReport} size="large" variant="contained">
+            <Button component={RouterLink} href="/reports" size="large" variant="contained">
               Continue
             </Button>
           </Stack>
