@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { getReports, deleteReport } from '@/services/reports';
-import { Box, Button, Typography, List, ListItem, ListItemText, Stack } from '@mui/material';
+import { Box, Button, Stack, Typography } from '@mui/material';
 import { RouterLink } from '@/components/core/link';
+import { ReportsTable } from '@/components/dashboard/single-appointment/tables/ReportsTable'
 
 export function ReportsPage(): React.JSX.Element {
   const [reports, setReports] = useState<any[]>([]);
@@ -36,8 +37,8 @@ export function ReportsPage(): React.JSX.Element {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Reports List
+        <Typography variant="h4" gutterBottom>
+        Reports Table
       </Typography>
       <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
         <Button component={RouterLink} href="/NewReport" variant="contained">
@@ -50,21 +51,7 @@ export function ReportsPage(): React.JSX.Element {
       {loading ? (
         <Typography>Loading...</Typography>
       ) : (
-        <List>
-          {reports.map((report) => (
-            <ListItem key={report._id} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <ListItemText primary={report.title} secondary={new Date(report.createdAt).toLocaleString()} />
-              <Box>
-                <Button component={RouterLink} href={`/report/${report._id}`} variant="outlined" sx={{ mr: 1 }}>
-                  View / Edit
-                </Button>
-                <Button variant="contained" color="error" onClick={() => handleDelete(report._id)}>
-                  Delete
-                </Button>
-              </Box>
-            </ListItem>
-          ))}
-        </List>
+        <ReportsTable reports={reports} onDelete={handleDelete} />
       )}
     </Box>
   );
