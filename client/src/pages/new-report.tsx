@@ -3,7 +3,7 @@ import { ReportForm } from '@/components/dashboard/single-appointment/forms/repo
 import { createReport } from '@/services/reports';
 import { useNavigate } from 'react-router-dom';
 
-// Interfaces compartidas para el reporte
+// Shared interfaces for Report and its Items
 export interface ReportItem {
   description: string;
   costCode: string;
@@ -27,9 +27,7 @@ export interface Report {
  * similar to a MongoDB ObjectId.
  */
 function generateObjectId(): string {
-  // Get current timestamp in seconds and convert to hex
   const timestamp = Math.floor(new Date().getTime() / 1000).toString(16);
-  // Append 16 random hexadecimal characters
   return (
     timestamp +
     'xxxxxxxxxxxxxxxx'.replace(/[x]/g, () =>
@@ -49,14 +47,12 @@ export function Page(): React.JSX.Element {
     type: '',
     parts: '',
     links: [],
-    user: generateObjectId(), // Ahora se genera un ObjectId válido para "user"
+    user: generateObjectId(), // Genera un ObjectId válido para "user"
     approvalNeeded: false,
   });
 
-  // Before submitting, ensure issueId is generated
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // If issueId is missing, generate one
     if (!report.issueId) {
       setReport((prev) => ({ ...prev, issueId: generateObjectId() }));
     }
@@ -74,23 +70,8 @@ export function Page(): React.JSX.Element {
   };
 
   return (
-    <div
-      style={{
-        padding: '70px',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <div
-        style={{
-          border: '1px solid #ccc',
-          padding: '20px',
-          borderRadius: '8px',
-          width: '100%',
-          maxWidth: '600px',
-        }}
-      >
+    <div style={{ padding: '70px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <div style={{ border: '1px solid #ccc', padding: '20px', borderRadius: '8px', width: '100%', maxWidth: '600px' }}>
         <h1 style={{ textAlign: 'center' }}>Create New Report</h1>
         <ReportForm
           formType="Other"

@@ -1,6 +1,6 @@
 import type * as React from 'react';
 import { useCallback, useState } from 'react';
-// import type { Report } from '@/interfaces/tables';
+import type { Report } from './report-form';
 
 interface UseFormHookReturnType {
   isDescriptionValid: boolean;
@@ -28,23 +28,22 @@ export const useFormHook = ({ report, setReport }: UseFormHookParams): UseFormHo
     [setReport]
   );
 
-  const validateForm: UseFormHookReturnType['validateForm'] = useCallback(() => {
+  const validateForm = useCallback(() => {
     setIsDescriptionValid(Boolean(report?.description?.trim()));
   }, [report?.description]);
 
-  const updateTitle: UseFormHookReturnType['updateTitle'] = useCallback(
-    (event) => {
+  const updateTitle = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       handleFieldChange('title', event.target.value);
     },
     [handleFieldChange]
   );
 
-  const handleSelectionChange: UseFormHookReturnType['handleSelectionChange'] = useCallback((event) => {
+  const handleSelectionChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(event.target.value);
-    // Add logic to update the report if needed
   }, []);
 
-  const handleKeyAdd: UseFormHookReturnType['handleKeyAdd'] = useCallback(
+  const handleKeyAdd = useCallback(
     <K extends keyof Report>(field: K, value: Report[K]) => {
       handleFieldChange(field, value);
     },

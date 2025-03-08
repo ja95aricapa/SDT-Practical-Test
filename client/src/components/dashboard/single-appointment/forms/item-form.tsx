@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Button, IconButton, Stack, TextField, Typography } from '@mui/material';
+import { Box, IconButton, Stack, TextField, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Uploader } from '@/components/dashboard/single-appointment/uploader';
 
@@ -19,7 +19,6 @@ interface ItemFormProps {
 export function ItemForm({ item, itemIndex, onUpdate, onRemove }: ItemFormProps): React.JSX.Element {
   const [localItem, setLocalItem] = React.useState<ReportItem>(item);
 
-  // Update a specific field and propagate the change upward
   const handleFieldChange = (field: keyof ReportItem, value: string | File[]) => {
     const updatedItem = { ...localItem, [field]: value };
     setLocalItem(updatedItem);
@@ -48,9 +47,6 @@ export function ItemForm({ item, itemIndex, onUpdate, onRemove }: ItemFormProps)
         value={localItem.costCode}
         onChange={(e) => handleFieldChange('costCode', e.target.value)}
       />
-      {/* Uploader to add images for this item.
-          It uses the existing Uploader component.
-          The onUpdate callback is used to update the images array */}
       <Uploader
         report={{ images: localItem.images }}
         setReport={(updated) => handleFieldChange('images', updated.images)}

@@ -1,4 +1,3 @@
-// client/src/pages/reports.tsx
 import React, { useEffect, useState } from 'react';
 import { getReports, deleteReport } from '@/services/reports';
 import { Box, Button, Typography, List, ListItem, ListItemText, Stack } from '@mui/material';
@@ -54,10 +53,7 @@ export function ReportsPage(): React.JSX.Element {
         <List>
           {reports.map((report) => (
             <ListItem key={report._id} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <ListItemText
-                primary={report.title}
-                secondary={new Date(report.createdAt).toLocaleString()}
-              />
+              <ListItemText primary={report.title} secondary={new Date(report.createdAt).toLocaleString()} />
               <Box>
                 <Button component={RouterLink} href={`/report/${report._id}`} variant="outlined" sx={{ mr: 1 }}>
                   View / Edit

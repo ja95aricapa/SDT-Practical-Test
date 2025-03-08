@@ -1,4 +1,3 @@
-// client/src/routes/index.tsx
 import * as React from 'react';
 import type { RouteObject } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';

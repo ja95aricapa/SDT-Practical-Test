@@ -1,31 +1,23 @@
 import * as React from 'react';
-import type { JSX } from 'react';
-import {
-  Box,
-  FormControl,
-  InputLabel,
-} from '@mui/material';
-
+import { Box, FormControl, InputLabel } from '@mui/material';
 import { TextEditor } from '@/components/core/text-editor-report-form/text-editor';
 import { Uploader } from '@/components/dashboard/single-appointment/uploader';
 import { useFormHook } from './form-hooks';
+import type { Report } from './report-form';
 
 interface ReportFormProps {
   report: Report;
   setReport: React.Dispatch<React.SetStateAction<Report>>;
 }
 
-export function GeneralForm({ report, setReport }: ReportFormProps): JSX.Element {
-
-  const {
-    handleFieldChange,
-  } = useFormHook({ report, setReport });
+export function GeneralForm({ report, setReport }: ReportFormProps): React.JSX.Element {
+  const { handleFieldChange } = useFormHook({ report, setReport });
 
   return (
     <>
       <FormControl>
         <InputLabel shrink htmlFor="description-editor">
-          Job Description <span style={{ fontWeight: 'lighter' }}>(required)</span>
+          Job Description (required)
         </InputLabel>
         <Box sx={{ mt: '8px', '& .tiptap-container': { minHeight: '8rem' } }}>
           <TextEditor
@@ -38,8 +30,8 @@ export function GeneralForm({ report, setReport }: ReportFormProps): JSX.Element
         </Box>
       </FormControl>
       <FormControl>
-        <InputLabel shrink htmlFor="description-editor">
-          Cost Code <span style={{ fontWeight: 'lighter' }}>(required)</span>
+        <InputLabel shrink htmlFor="costcode-editor">
+          Cost Code (required)
         </InputLabel>
         <Box sx={{ mt: '8px', '& .tiptap-container': { minHeight: '8rem' } }}>
           <TextEditor

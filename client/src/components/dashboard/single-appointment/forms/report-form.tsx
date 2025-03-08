@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { Box, Button, Stack } from '@mui/material';
-import { ItemForm } from './item-form'
+import { ItemForm } from './item-form';
 
-// Interfaces for a report item and the full report
 export interface ReportItem {
   description: string;
   costCode: string;
@@ -35,25 +34,21 @@ export function ReportForm({
   sendReportToDatabase,
   formType,
 }: ReportFormProps): React.JSX.Element {
-  // Update report type when formType changes
   React.useEffect(() => {
     setReport((prev) => ({ ...prev, type: formType }));
   }, [formType, setReport]);
 
-  // Add a new empty item to the report
   const addNewItem = () => {
     const newItem = { description: '', costCode: '', images: [] };
     setReport((prev) => ({ ...prev, items: [...prev.items, newItem] }));
   };
 
-  // Update an existing item based on its index
   const updateItem = (index: number, updatedItem: ReportItem) => {
     const newItems = [...report.items];
     newItems[index] = updatedItem;
     setReport((prev) => ({ ...prev, items: newItems }));
   };
 
-  // Remove an item from the report
   const removeItem = (index: number) => {
     const newItems = report.items.filter((_, i) => i !== index);
     setReport((prev) => ({ ...prev, items: newItems }));
@@ -62,7 +57,6 @@ export function ReportForm({
   return (
     <Box sx={{ p: { sm: 0, md: 3 } }}>
       <Stack spacing={3}>
-        {/* Title Input */}
         <Box>
           <input
             type="text"
@@ -72,8 +66,6 @@ export function ReportForm({
             style={{ width: '100%', padding: '8px', fontSize: '16px' }}
           />
         </Box>
-
-        {/* Items Section */}
         <Stack spacing={2}>
           {report.items.map((item, index) => (
             <ItemForm
@@ -88,8 +80,6 @@ export function ReportForm({
             Add Item
           </Button>
         </Stack>
-
-        {/* Additional Fields (Optional) */}
         <Box>
           <input
             type="text"
@@ -113,7 +103,6 @@ export function ReportForm({
             style={{ width: '100%', padding: '8px', fontSize: '16px' }}
           />
         </Box>
-
         <Button disabled={loading} onClick={sendReportToDatabase} size="large" variant="outlined" fullWidth>
           {loading ? 'Loading...' : 'Upload Report'}
         </Button>

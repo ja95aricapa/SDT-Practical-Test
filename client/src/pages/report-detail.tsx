@@ -1,4 +1,3 @@
-// client/src/pages/report-detail.tsx
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getReportById, updateReport } from '@/services/reports';
