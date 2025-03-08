@@ -66,17 +66,6 @@ export function ReportForm({
             onChange={(e) => setReport((prev) => ({ ...prev, title: e.target.value }))}
           />
         </Box>
-        {/* Report Description */}
-        <Box>
-          <TextField
-            label="Description"
-            fullWidth
-            multiline
-            minRows={3}
-            value={report.description}
-            onChange={(e) => setReport((prev) => ({ ...prev, description: e.target.value }))}
-          />
-        </Box>
         {/* Items Section */}
         <Stack spacing={2}>
           {report.items.map((item, index) => (
