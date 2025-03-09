@@ -21,7 +21,9 @@
     "express-oauth2-jwt-bearer": "^1.6.0",
     "mongoose": "^6.12.8",
     "patch-package": "^8.0.0",
-    "pm2": "^5.4.0"
+    "pm2": "^5.4.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.3"

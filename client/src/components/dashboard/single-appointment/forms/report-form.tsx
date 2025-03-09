@@ -1,26 +1,28 @@
+/**
+ * ReportForm component that allows users to create or edit a report.
+ * It includes inputs for title, items, user, type, parts, links, and a checkbox for approvalNeeded.
+ * It also provides action buttons for submitting or canceling.
+ */
 import * as React from 'react';
-import type { JSX } from 'react';
-import { useEffect } from 'react';
-// import type { Issue, Report } from '@/interfaces/tables';
 import {
   Box,
   Button,
   Stack,
+  TextField,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
-
-import { useFormHook } from './form-hooks';
-import { GeneralForm } from './general-form';
+import { ItemForm } from './item-form';
+import { useNavigate } from 'react-router-dom';
+import type { Report, ReportItem } from '@/types/report';
 
 interface ReportFormProps {
   loading: boolean;
-  report: Report; // Define a more specific type if possible
+  report: Report;
   setReport: React.Dispatch<React.SetStateAction<Report>>;
-  sendReportToDatabase: () => void;
+  sendReportToDatabase: (e: React.FormEvent) => void;
   formType: string;
 }
-  
-  // NOTE TO CANDIDATE
-  // report and setReport are the main props that are passed to the form
 
 export function ReportForm({
   loading,
@@ -28,44 +30,122 @@ export function ReportForm({
   setReport,
   sendReportToDatabase,
   formType,
-}: ReportFormProps): JSX.Element {
+}: ReportFormProps): React.JSX.Element {
+  const navigate = useNavigate();
 
-  const { validateForm, handleFieldChange } = useFormHook({
-    report,
-    setReport,
-  });
+  // Update report type based on formType prop
+  React.useEffect(() => {
+    setReport((prev) => ({ ...prev, type: formType }));
+  }, [formType, setReport]);
 
-  useEffect(() => {
-    handleFieldChange('type', formType);
-  }, [formType, handleFieldChange]);
+  const addNewItem = () => {
+    const newItem: ReportItem = { description: '', costCode: '', images: [] };
+    setReport((prev) => ({ ...prev, items: [...prev.items, newItem] }));
+  };
 
-  useEffect(() => {
-    validateForm();
-  }, [report, validateForm]);
+  const updateItem = (index: number, updatedItem: ReportItem) => {
+    const newItems = [...report.items];
+    newItems[index] = updatedItem;
+    setReport((prev) => ({ ...prev, items: newItems }));
+  };
+
+  const removeItem = (index: number) => {
+    const newItems = report.items.filter((_, i) => i !== index);
+    setReport((prev) => ({ ...prev, items: newItems }));
+  };
+
+  // Cancel button returns to reports table
+  const handleCancel = () => {
+    navigate('/reports');
+  };
 
   return (
-    <Box sx={{ sm: { padding: 0 }, md: { padding: 3 } }}>
+    <Box sx={{ p: { sm: 0, md: 3 } }}>
       <Stack spacing={3}>
-
-        {/* Directly render the appropriate form component */}
-          <GeneralForm report={report} setReport={setReport} />
-
-        {/* NOTE TO CANDIDATE */}
-        {/* We are keen on implementing forms in a modular way. So they can be combined and imported form any part of the application*/}
-        {/* Feel free to follow this structure to create your form. Creating new components or component to populate this from passing down setReport */}
-
-        {/* Example - RepairsForm that could be added */}
-        {/* <RepairsForm  report={report} setReport={setReport} /> */}
-
-        <Button
-          disabled={loading} // Disable button if form is invalid or loading is true
-          onClick={sendReportToDatabase}
-          size="large"
-          sx={{ width: '100%' }}
-          variant="outlined"
-        >
-          {loading ? 'Loading...' : 'Upload Report'}
-        </Button>
+        {/* Report Title Input */}
+        <Box>
+          <TextField
+            label="Report Title"
+            fullWidth
+            value={report.title}
+            onChange={(e) => setReport((prev) => ({ ...prev, title: e.target.value }))}
+          />
+        </Box>
+        {/* Items Section */}
+        <Stack spacing={2}>
+          {report.items.map((item, index) => (
+            <ItemForm
+              key={index}
+              item={item}
+              itemIndex={index}
+              onUpdate={(updatedItem) => updateItem(index, updatedItem)}
+              onRemove={() => removeItem(index)}
+            />
+          ))}
+          <Button variant="outlined" onClick={addNewItem}>
+            Add Item
+          </Button>
+        </Stack>
+        {/* Additional Fields */}
+        <Box>
+          <TextField
+            label="User"
+            fullWidth
+            value={report.user}
+            onChange={(e) => setReport((prev) => ({ ...prev, user: e.target.value }))}
+          />
+        </Box>
+        <Box>
+          <TextField
+            label="Type"
+            fullWidth
+            value={report.type}
+            onChange={(e) => setReport((prev) => ({ ...prev, type: e.target.value }))}
+          />
+        </Box>
+        <Box>
+          <TextField
+            label="Parts (optional)"
+            fullWidth
+            value={report.parts}
+            onChange={(e) => setReport((prev) => ({ ...prev, parts: e.target.value }))}
+          />
+        </Box>
+        <Box>
+          <TextField
+            label="Links (comma separated, optional)"
+            fullWidth
+            value={report.links.join(',')}
+            onChange={(e) =>
+              setReport((prev) => ({
+                ...prev,
+                links: e.target.value.split(',').map((link) => link.trim()).filter((link) => link),
+              }))
+            }
+          />
+        </Box>
+        <Box>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={report.approvalNeeded}
+                onChange={(e) =>
+                  setReport((prev) => ({ ...prev, approvalNeeded: e.target.checked }))
+                }
+              />
+            }
+            label="Approval Needed"
+          />
+        </Box>
+        {/* Action Buttons */}
+        <Stack direction="row" spacing={2}>
+          <Button disabled={loading} onClick={sendReportToDatabase} size="large" variant="outlined" fullWidth>
+            {loading ? 'Loading...' : 'Upload Report'}
+          </Button>
+          <Button disabled={loading} onClick={handleCancel} size="large" variant="outlined" fullWidth>
+            Cancel
+          </Button>
+        </Stack>
       </Stack>
     </Box>
   );

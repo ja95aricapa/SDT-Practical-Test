@@ -1,6 +1,10 @@
+/**
+ * Custom hook for managing form state.
+ * Provides helper functions for updating form fields and validation.
+ */
 import type * as React from 'react';
 import { useCallback, useState } from 'react';
-// import type { Report } from '@/interfaces/tables';
+import type { Report } from '@/types/report';
 
 interface UseFormHookReturnType {
   isDescriptionValid: boolean;
@@ -21,6 +25,7 @@ export const useFormHook = ({ report, setReport }: UseFormHookParams): UseFormHo
   const [isDescriptionValid, setIsDescriptionValid] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string>('');
 
+  // Updates the specified field in the report object
   const handleFieldChange = useCallback(
     (field: keyof Report, value: Report[keyof Report]) => {
       setReport((prev: Report) => ({ ...prev, [field]: value }));
@@ -28,23 +33,25 @@ export const useFormHook = ({ report, setReport }: UseFormHookParams): UseFormHo
     [setReport]
   );
 
-  const validateForm: UseFormHookReturnType['validateForm'] = useCallback(() => {
-    setIsDescriptionValid(Boolean(report?.description?.trim()));
-  }, [report?.description]);
+  // Validates the description field (assumes description is required)
+  const validateForm = useCallback(() => {
+    setIsDescriptionValid(Boolean(report.description?.trim()));
+  }, [report.description]);
 
-  const updateTitle: UseFormHookReturnType['updateTitle'] = useCallback(
-    (event) => {
+  // Updates the title field from input change
+  const updateTitle = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       handleFieldChange('title', event.target.value);
     },
     [handleFieldChange]
   );
 
-  const handleSelectionChange: UseFormHookReturnType['handleSelectionChange'] = useCallback((event) => {
+  // Handles selection change (if needed)
+  const handleSelectionChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(event.target.value);
-    // Add logic to update the report if needed
   }, []);
 
-  const handleKeyAdd: UseFormHookReturnType['handleKeyAdd'] = useCallback(
+  const handleKeyAdd = useCallback(
     <K extends keyof Report>(field: K, value: Report[K]) => {
       handleFieldChange(field, value);
     },

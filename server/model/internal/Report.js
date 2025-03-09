@@ -1,5 +1,39 @@
 const mongoose = require("mongoose");
 
+const imageSchema = new mongoose.Schema({
+  url: {
+    type: String,
+    required: true,
+  },
+  key: {
+    type: String,
+  },
+  fileType: {
+    type: String,
+  },
+  fileName: {
+    type: String,
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  }
+});
+
+const itemSchema = new mongoose.Schema({
+  description: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  costCode: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  images: [imageSchema],
+});
+
 const reportSchema = new mongoose.Schema({
   isDeleted: {
     type: Boolean,
@@ -19,22 +53,7 @@ const reportSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  description: {
-    type: String,
-    trim: true,
-  },
-  images: [
-    {
-      url: {
-        type: String, // URL of the image
-        required: true,
-      },
-      isDeleted: {
-        type: Boolean,
-        default: false,
-      },
-    },
-  ],
+  items: [itemSchema],
   type: {
     type: String,
     trim: true,
@@ -49,7 +68,7 @@ const reportSchema = new mongoose.Schema({
   },
   links: [
     {
-      type: String, // Assuming links are stored as URLs
+      type: String,
     },
   ],
   user: {
