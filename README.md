@@ -334,7 +334,3 @@ Develop a backend service that can handle data received from the React frontend,
 ---
 
 We are looking forward to your solution. If you have any questions, please reach out to your recruitment contact.
-
-```
-
-```
