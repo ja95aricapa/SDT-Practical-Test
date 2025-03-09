@@ -1,7 +1,11 @@
+/**
+ * Report Detail page for editing an existing report.
+ * It fetches the report by id and uses the ReportForm for updating.
+ */
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getReportById, updateReport } from '@/services/reports';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { ReportForm } from '@/components/dashboard/single-appointment/forms/report-form';
 
 export function ReportDetailPage(): React.JSX.Element {
@@ -9,6 +13,7 @@ export function ReportDetailPage(): React.JSX.Element {
   const [report, setReport] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
+  // Fetch report by id
   const fetchReport = async () => {
     if (id) {
       setLoading(true);

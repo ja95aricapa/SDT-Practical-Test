@@ -1,4 +1,7 @@
-// client/src/components/dashboard/single-appointment/uploader.tsx
+/**
+ * Uploader component for handling file drops and image uploads.
+ * It supports image resizing via Pica, shows processing status, and updates the report's images.
+ */
 'use client';
 
 import * as React from 'react';
@@ -16,15 +19,19 @@ import { trash } from 'ionicons/icons';
 import Pica from 'pica';
 import { toast } from '@/components/core/toaster';
 import { FileIcon } from '@/components/core/file-icon';
-// Como no se exporta FileRejection, lo definimos como any:
+
+// Since FileRejection is not exported, we define it as any
 type FileRejection = any;
 
-import { FileDropzone } from '@/components/core/file-dropzone'; // Asegúrate de que este componente acepte un prop "caption" de tipo ReactNode
+import { FileDropzone } from '@/components/core/file-dropzone';
 
 interface ExtendedFile extends File {
   preview: string;
 }
 
+/**
+ * Converts a file size (in bytes) to a human-readable string.
+ */
 function bytesToSize(bytes: number, decimals = 2): string {
   if (bytes === 0) {
     return '0 Bytes';
@@ -44,6 +51,7 @@ export interface UploaderProps {
 }
 
 export function Uploader({ report, setReport, onClose }: UploaderProps): React.JSX.Element {
+  // Initialize files from report.images or an empty array if undefined
   const [files, setFiles] = React.useState<ExtendedFile[]>(report.images || []);
   const [open, setOpen] = React.useState<boolean>(true);
   const [isMobile] = React.useState<boolean>(isPlatform('mobile'));
@@ -70,6 +78,7 @@ export function Uploader({ report, setReport, onClose }: UploaderProps): React.J
   const MAX_FILE_SIZE_SINGLE = 70 * 1024 * 1024; // 70 MB
   const MAX_FILE_COUNT = 50;
 
+  // Update files when report.images changes
   React.useEffect(() => {
     setFiles(report.images || []);
   }, [report.images, open]);
@@ -81,18 +90,13 @@ export function Uploader({ report, setReport, onClose }: UploaderProps): React.J
         toast.error(`Too many files. Maximum allowed is ${MAX_FILE_COUNT}.`);
         return;
       }
-
       const totalSizeAfterAdd =
         files.reduce((acc, file) => acc + file.size, 0) +
         newFiles.reduce((acc, file) => acc + file.size, 0);
-
       if (totalSizeAfterAdd > MAX_FILE_SIZE) {
-        toast.error(
-          `Total selected files size exceeds ${bytesToSize(MAX_FILE_SIZE)}. Upload in smaller batches, images will be compressed.`
-        );
+        toast.error(`Total selected files size exceeds ${bytesToSize(MAX_FILE_SIZE)}. Upload in smaller batches, images will be compressed.`);
         return;
       }
-
       setIsProcessing(true);
       setTotalFilesDropped(newFiles.length);
       try {
@@ -113,6 +117,7 @@ export function Uploader({ report, setReport, onClose }: UploaderProps): React.J
             blob = new Blob([arrayBuffer], { type: file.type });
           }
           const resizedFile = new File([blob], newFilename, { type: blob.type }) as ExtendedFile;
+          // Create a preview URL for the new file
           resizedFile.preview = URL.createObjectURL(resizedFile);
           resizedFiles.push(resizedFile);
           setProcessingCount((prevCount) => prevCount + 1);
@@ -194,6 +199,7 @@ export function Uploader({ report, setReport, onClose }: UploaderProps): React.J
     console.log('Files accepted for processing:', files);
   };
 
+  // Update total file size and check if limits are exceeded whenever files change
   React.useEffect(() => {
     const newTotalSize = files.reduce((acc, file) => acc + file.size, 0);
     setTotalSize(newTotalSize);
@@ -233,11 +239,7 @@ export function Uploader({ report, setReport, onClose }: UploaderProps): React.J
 
   return (
     <Box sx={{ p: { sm: 0, md: 3 } }}>
-      <Stack
-        direction="row"
-        spacing={3}
-        sx={{ alignItems: 'center', justifyContent: 'space-between', py: 2 }}
-      >
+      <Stack direction="row" spacing={3} sx={{ alignItems: 'center', justifyContent: 'space-between', py: 2 }}>
         <Typography variant="h6">Upload photos or files</Typography>
         <Typography color="warning.main" variant="body2">
           {`${bytesToSize(MAX_FILE_SIZE)} or ${MAX_FILE_COUNT} files max`}
@@ -264,7 +266,6 @@ export function Uploader({ report, setReport, onClose }: UploaderProps): React.J
           </Box>
         )}
       </Stack>
-
       <Stack spacing={3}>
         <FileDropzone
           accept={ACCEPTED_FILE_TYPES}
@@ -372,12 +373,7 @@ export function Uploader({ report, setReport, onClose }: UploaderProps): React.J
             </Stack>
             {isMobile ? (
               <Stack direction="row" spacing={2} sx={{ alignItems: 'center', flexDirection: 'column' }}>
-                <Button
-                  onClick={handleRemoveAll}
-                  variant="contained"
-                  color="error"
-                  size="small"
-                >
+                <Button onClick={handleRemoveAll} variant="contained" color="error" size="small">
                   Remove all
                 </Button>
               </Stack>

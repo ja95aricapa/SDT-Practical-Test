@@ -1,3 +1,7 @@
+/**
+ * Hero component shown on the home page. It displays a background image,
+ * a welcome message, instructions, and a button that redirects to the reports page.
+ */
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -5,20 +9,21 @@ import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import { useColorScheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-
-import { paths } from '@/paths';
 import { RouterLink } from '@/components/core/link';
 
 export function Hero(): React.JSX.Element {
   const { colorScheme } = useColorScheme();
   const [img, setImg] = React.useState<string>('/assets/home-hero-light.png');
 
+  // Update image based on color scheme
   React.useEffect(() => {
     setImg(colorScheme === 'dark' ? '/assets/home-hero-dark.png' : '/assets/home-hero-light.png');
   }, [colorScheme]);
+
   const welcomeMessage = 'Sync Design Technologies Technical Test';
   const instructions =
     'Thank you for applying to Sync Design Technologies. In this assessment, you will be tasked with modifying the front-end according to the specified criteria and developing a comprehensive and scalable back-end to ensure its functionality.';
+
   return (
     <Box
       sx={{
@@ -78,6 +83,7 @@ export function Hero(): React.JSX.Element {
             </Typography>
             <Typography sx={{ textAlign: 'center' }}>{instructions}</Typography>
           </Stack>
+          {/* The Continue button now redirects to the "/reports" page */}
           <Stack direction="row" spacing={2} sx={{ justifyContent: 'center' }}>
             <Button component={RouterLink} href="/reports" size="large" variant="contained">
               Continue

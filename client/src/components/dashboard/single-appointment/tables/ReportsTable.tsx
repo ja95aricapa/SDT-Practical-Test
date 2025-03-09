@@ -1,3 +1,7 @@
+/**
+ * ReportsTable component displays reports in a table format with pagination,
+ * filtering, and sortable columns. Users can click on column headers to change sorting.
+ */
 import React, { useState, useMemo } from 'react';
 import {
   Table,
@@ -11,7 +15,7 @@ import {
   Button,
   Box,
   TextField,
-  InputAdornment
+  InputAdornment,
 } from '@mui/material';
 import { RouterLink } from '@/components/core/link';
 
@@ -32,18 +36,28 @@ export const ReportsTable: React.FC<ReportsTableProps> = ({ reports, onDelete })
   const [page, setPage] = useState<number>(0);
   const rowsPerPage = 10;
   const [filterText, setFilterText] = useState<string>('');
+  const [orderBy, setOrderBy] = useState<keyof ReportData>('createdAt');
+  const [order, setOrder] = useState<'asc' | 'desc'>('desc');
 
-  // Ordena los reportes de mayor a menor (por createdAt)
+  // Sort reports based on selected column and order
   const sortedReports = useMemo(() => {
-    return [...reports].sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
-  }, [reports]);
+    return [...reports].sort((a, b) => {
+      const aVal = a[orderBy];
+      const bVal = b[orderBy];
+      let comparison = 0;
+      if (orderBy === 'createdAt') {
+        comparison = new Date(aVal).getTime() - new Date(bVal).getTime();
+      } else {
+        comparison = aVal.localeCompare(bVal);
+      }
+      return order === 'asc' ? comparison : -comparison;
+    });
+  }, [reports, orderBy, order]);
 
-  // Filtra por título (puedes ampliar este filtro según necesites)
+  // Filter reports by title
   const filteredReports = useMemo(() => {
     if (!filterText.trim()) return sortedReports;
-    return sortedReports.filter(report =>
+    return sortedReports.filter((report) =>
       report.title.toLowerCase().includes(filterText.toLowerCase())
     );
   }, [filterText, sortedReports]);
@@ -56,6 +70,16 @@ export const ReportsTable: React.FC<ReportsTableProps> = ({ reports, onDelete })
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
+
+  // Toggle sorting for a column
+  const handleSort = (column: keyof ReportData) => {
+    if (orderBy === column) {
+      setOrder(order === 'asc' ? 'desc' : 'asc');
+    } else {
+      setOrderBy(column);
+      setOrder('asc');
+    }
+  };
 
   return (
     <Paper>
@@ -74,7 +98,7 @@ export const ReportsTable: React.FC<ReportsTableProps> = ({ reports, onDelete })
               <InputAdornment position="start">
                 🔍
               </InputAdornment>
-            )
+            ),
           }}
         />
       </Box>
@@ -82,11 +106,22 @@ export const ReportsTable: React.FC<ReportsTableProps> = ({ reports, onDelete })
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Id</TableCell>
-              <TableCell>User</TableCell>
-              <TableCell>Title</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Created At</TableCell>
+              {/* Clicking headers changes sorting */}
+              <TableCell onClick={() => handleSort('_id')} style={{ cursor: 'pointer' }}>
+                Id {orderBy === '_id' ? (order === 'asc' ? '▲' : '▼') : ''}
+              </TableCell>
+              <TableCell onClick={() => handleSort('user')} style={{ cursor: 'pointer' }}>
+                User {orderBy === 'user' ? (order === 'asc' ? '▲' : '▼') : ''}
+              </TableCell>
+              <TableCell onClick={() => handleSort('title')} style={{ cursor: 'pointer' }}>
+                Title {orderBy === 'title' ? (order === 'asc' ? '▲' : '▼') : ''}
+              </TableCell>
+              <TableCell onClick={() => handleSort('type')} style={{ cursor: 'pointer' }}>
+                Type {orderBy === 'type' ? (order === 'asc' ? '▲' : '▼') : ''}
+              </TableCell>
+              <TableCell onClick={() => handleSort('createdAt')} style={{ cursor: 'pointer' }}>
+                Created At {orderBy === 'createdAt' ? (order === 'asc' ? '▲' : '▼') : ''}
+              </TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>

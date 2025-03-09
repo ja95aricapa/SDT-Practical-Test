@@ -1,11 +1,13 @@
-// client/src/types/report.ts
+/**
+ * Defines TypeScript types for Report and ReportItem.
+ */
 export interface ReportItem {
     description: string;
     costCode: string;
-    images: File[];
+    images: File[]; // You might later adjust this type if you store image URLs, keys, etc.
   }
   
-export interface Report {
+  export interface Report {
     issueId: string;
     createdAt: Date;
     title: string;
@@ -16,5 +18,4 @@ export interface Report {
     links: string[];
     user: string;
     approvalNeeded: boolean;
-}
-  
+  }  

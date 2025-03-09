@@ -1,4 +1,7 @@
-// client/src/components/dashboard/single-appointment/forms/item-form.tsx
+/**
+ * ItemForm component for entering details of a report item.
+ * It includes inputs for description, cost code, and an Uploader for images.
+ */
 import * as React from 'react';
 import { Box, IconButton, Stack, TextField, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';

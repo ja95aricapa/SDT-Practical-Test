@@ -1,4 +1,7 @@
-// client/src/pages/new-report.tsx
+/**
+ * New Report page where users can create a report.
+ * It uses the ReportForm component and sends data via createReport API call.
+ */
 import * as React from 'react';
 import { ReportForm } from '@/components/dashboard/single-appointment/forms/report-form';
 import { createReport } from '@/services/reports';
@@ -6,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import type { Report } from '@/types/report';
 
 /**
- * Genera un ObjectId de 24 caracteres (similar a un ObjectId de MongoDB)
+ * Generates a 24-character ObjectId (similar to MongoDB ObjectId).
  */
 function generateObjectId(): string {
   const timestamp = Math.floor(new Date().getTime() / 1000).toString(16);
@@ -28,12 +31,14 @@ export function Page(): React.JSX.Element {
     type: '',
     parts: '',
     links: [],
-    user: generateObjectId(), // Se genera un ObjectId válido para "user"
+    // Generates a valid ObjectId for "user"
+    user: generateObjectId(),
     approvalNeeded: false,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Ensure issueId exists
     if (!report.issueId) {
       setReport((prev) => ({ ...prev, issueId: generateObjectId() }));
     }
@@ -52,15 +57,7 @@ export function Page(): React.JSX.Element {
 
   return (
     <div style={{ padding: '70px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <div
-        style={{
-          border: '1px solid #ccc',
-          padding: '20px',
-          borderRadius: '8px',
-          width: '100%',
-          maxWidth: '600px',
-        }}
-      >
+      <div style={{ border: '1px solid #ccc', padding: '20px', borderRadius: '8px', width: '100%', maxWidth: '600px' }}>
         <h1 style={{ textAlign: 'center' }}>Create New Report</h1>
         <ReportForm
           formType="Other"

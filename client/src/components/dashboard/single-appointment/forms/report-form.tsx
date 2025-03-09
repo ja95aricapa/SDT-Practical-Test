@@ -1,4 +1,8 @@
-// client/src/components/dashboard/single-appointment/forms/report-form.tsx
+/**
+ * ReportForm component that allows users to create or edit a report.
+ * It includes inputs for title, items, user, type, parts, links, and a checkbox for approvalNeeded.
+ * It also provides action buttons for submitting or canceling.
+ */
 import * as React from 'react';
 import {
   Box,
@@ -29,6 +33,7 @@ export function ReportForm({
 }: ReportFormProps): React.JSX.Element {
   const navigate = useNavigate();
 
+  // Update report type based on formType prop
   React.useEffect(() => {
     setReport((prev) => ({ ...prev, type: formType }));
   }, [formType, setReport]);
@@ -49,7 +54,7 @@ export function ReportForm({
     setReport((prev) => ({ ...prev, items: newItems }));
   };
 
-  // Función para cancelar y volver a la lista de reportes
+  // Cancel button returns to reports table
   const handleCancel = () => {
     navigate('/reports');
   };
@@ -57,7 +62,7 @@ export function ReportForm({
   return (
     <Box sx={{ p: { sm: 0, md: 3 } }}>
       <Stack spacing={3}>
-        {/* Report Title */}
+        {/* Report Title Input */}
         <Box>
           <TextField
             label="Report Title"
@@ -132,7 +137,7 @@ export function ReportForm({
             label="Approval Needed"
           />
         </Box>
-        {/* Botones de acción */}
+        {/* Action Buttons */}
         <Stack direction="row" spacing={2}>
           <Button disabled={loading} onClick={sendReportToDatabase} size="large" variant="outlined" fullWidth>
             {loading ? 'Loading...' : 'Upload Report'}

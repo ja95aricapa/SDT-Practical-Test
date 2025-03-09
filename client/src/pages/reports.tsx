@@ -1,3 +1,7 @@
+/**
+ * Reports Page that shows a table of reports.
+ * It includes buttons for returning home, creating a new report, and refreshing data.
+ */
 import React, { useEffect, useState } from 'react';
 import { getReports, deleteReport } from '@/services/reports';
 import { Box, Button, Stack, Typography } from '@mui/material';
@@ -8,6 +12,7 @@ export function ReportsPage(): React.JSX.Element {
   const [reports, setReports] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
+  // Fetch reports from API
   const fetchReports = async () => {
     setLoading(true);
     try {

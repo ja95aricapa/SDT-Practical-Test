@@ -1,4 +1,7 @@
-// client/src/components/dashboard/single-appointment/forms/form-hooks.tsx
+/**
+ * Custom hook for managing form state.
+ * Provides helper functions for updating form fields and validation.
+ */
 import type * as React from 'react';
 import { useCallback, useState } from 'react';
 import type { Report } from '@/types/report';
@@ -22,6 +25,7 @@ export const useFormHook = ({ report, setReport }: UseFormHookParams): UseFormHo
   const [isDescriptionValid, setIsDescriptionValid] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string>('');
 
+  // Updates the specified field in the report object
   const handleFieldChange = useCallback(
     (field: keyof Report, value: Report[keyof Report]) => {
       setReport((prev: Report) => ({ ...prev, [field]: value }));
@@ -29,10 +33,12 @@ export const useFormHook = ({ report, setReport }: UseFormHookParams): UseFormHo
     [setReport]
   );
 
+  // Validates the description field (assumes description is required)
   const validateForm = useCallback(() => {
     setIsDescriptionValid(Boolean(report.description?.trim()));
   }, [report.description]);
 
+  // Updates the title field from input change
   const updateTitle = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       handleFieldChange('title', event.target.value);
@@ -40,6 +46,7 @@ export const useFormHook = ({ report, setReport }: UseFormHookParams): UseFormHo
     [handleFieldChange]
   );
 
+  // Handles selection change (if needed)
   const handleSelectionChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(event.target.value);
   }, []);

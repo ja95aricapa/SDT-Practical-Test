@@ -1,3 +1,6 @@
+/**
+ * Reports service for API calls related to reports.
+ */
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:3001/api/reports';
